@@ -14,20 +14,22 @@ var options = { "Cache-Control": "no-cache,max-age=0",
 };
 
 
-url = "http://m.espn.go.com/ncf/scoreboard?";
+url = "http://m.espn.go.com/ncb/scoreboard?&groupId=50";
 rest.get(url, {headers: options}).on('complete', function(data) {
   // console.log(data);
   $ = cheerio.load(data);
   t = $(".match").each(function(index, game_table){
     game_table = $(game_table);
-    var v = game_table.find(".away-competitor .competitor-name").text();
-    var h = game_table.find(".home-competitor .competitor-name").text();
+    vat teams = game_table.find(".competitor .wide strong").text();
+    var v = teams[0];
+    var h = teams[1];
 
-    var v_score = game_table.find(".away-competitor td").last().text();
-    var h_score = game_table.find(".home-competitor td").last().text();
+    var scores = game_table.find(".competitor td").text();
+    var v_score = scores[1];
+    var h_score = scores[3];
 
     var time = game_table.find("th").text();
-
+    var date = $(game_table).closest(":has(.day-head)").find('.day-head').text();
     // h_tt = game_table.find(".home .team-total").text().trim().replace(/\s{2,}/g, ' ');
 
     console.log(v + " " + v_score + ", " + h + " " + h_score + ", time: " + time);
